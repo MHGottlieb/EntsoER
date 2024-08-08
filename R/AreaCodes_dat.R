@@ -1,0 +1,17 @@
+#' Area Codes Data
+#'
+#' A dataset containing Area names and codes from ENTSO-E to ease navigation
+#' when using fetch() and other functions
+#'
+#' @format A data frame with 321 rows and 7 variables:
+#' \describe{
+#'   \item{AreaCode}{ENTSO-E's formal code for each area (e.g. bidding zone)}
+#'   \item{AreaTypeCode}{BZN = Bidding Zone, CTA = Control Area, CTY = Country}
+#'   \item{AreaName}{Shorthand names for areas}
+#'   \item{MapCode}{ENTSO-E mapcodes}
+#'   \item{Code}{Shorthand names}
+#'   \item{Name_Long}{Long names}
+#'   \item{Dataset}{Which ENTSO-E datasets correspond to what areas}
+#' }
+#' @source \url{https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html#_areas}
+"AreaCodes_dat"
