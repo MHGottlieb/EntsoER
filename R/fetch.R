@@ -80,7 +80,7 @@ fetch <- function(dataset="LOAD",
   dataset <- toupper(dataset)
   sets <- data.frame(sets = c("LOAD", "PRICE", "GENERATION", "GENERATION_UNIT"), 
                      file = c("ActualTotalLoad_6.1.A", 
-                              "DayAheadPrices_12.1.D",
+                              "EnergyPrices_12.1.D_r3",
                               "AggregatedGenerationPerType_16.1.B_C",
                               "ActualGenerationOutputPerGenerationUnit_16.1.A"))
   
