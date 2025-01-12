@@ -26,7 +26,7 @@
 #' }
 #' 
 #' @references
-#' #\url{https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html}
+#' \url{https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html}
 #' @author
 #' Magnus Hornoe Gottlieb
 #' @keywords Energy Power Grid ENTSO-E Europe
@@ -183,7 +183,7 @@ fetch <- function(dataset="LOAD",
            for(i in files){
              temp <- read.csv(file.path(folder, i), sep="\t")
              temp <- dplyr::filter(temp, AreaCode %in% AreaCodes$AreaCode)
-             temp[1] <- as.POSIXct(temp$DateTime, tz = "UTC")
+             temp[1] <- as.POSIXct(temp$DateTime.UTC., tz = "UTC")
              temp <- dplyr::filter(temp, DateTime >= from & DateTime <= to)
              temp[3] <- as.factor(temp$AreaCode)
              temp[8] <- as.factor(temp$Currency)
