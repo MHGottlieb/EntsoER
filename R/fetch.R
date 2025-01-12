@@ -26,7 +26,7 @@
 #' }
 #' 
 #' @references
-#' \url{https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html}
+#' #\url{https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html}
 #' @author
 #' Magnus Hornoe Gottlieb
 #' @keywords Energy Power Grid ENTSO-E Europe
