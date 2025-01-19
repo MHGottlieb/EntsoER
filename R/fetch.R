@@ -37,15 +37,6 @@
 #' @importFrom utils object.size read.csv
 #' @export
 
-
-dataset="PRICE"
-areas="all"
-aggregate.hourly = TRUE
-from=as.Date(format(Sys.Date(), "%Y-%m-01")) - lubridate::years(1)
-to=lubridate::floor_date(Sys.time(), "month")-86400
-technology = NULL
-units = NULL
-
 fetch <- function(dataset="PRICE",
                   areas="all",
                   aggregate.hourly = TRUE,
