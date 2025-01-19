@@ -37,10 +37,19 @@
 #' @importFrom utils object.size read.csv
 #' @export
 
-fetch <- function(dataset="LOAD",
+
+dataset="PRICE"
+areas="all"
+aggregate.hourly = TRUE
+from=as.Date(format(Sys.Date(), "%Y-%m-01")) - lubridate::years(1)
+to=lubridate::floor_date(Sys.time(), "month")-86400
+technology = NULL
+units = NULL
+
+fetch <- function(dataset="PRICE",
                   areas="all",
                   aggregate.hourly = TRUE,
-                  from=lubridate::floor_date(Sys.time(), "year"),
+                  from=as.Date(format(Sys.Date(), "%Y-%m-01")) - lubridate::years(1),
                   to=lubridate::floor_date(Sys.time(), "month")-86400,
                   technology = NULL,
                   units = NULL){
@@ -99,6 +108,7 @@ fetch <- function(dataset="LOAD",
   }
   
   #AreaCodes
+  #data("AreaCodes_dat", package = "EntsoER")
   AreaCodes <- dplyr::filter(AreaCodes_dat, Dataset==set)
   
   if(all(toupper(areas)=="ALL")){
@@ -133,10 +143,10 @@ fetch <- function(dataset="LOAD",
          LOAD={
            
            # selecting the right folder
-           folder <- file.path(folder, set)
+           data_folder <- file.path(folder, set)
            
            # selecting which files in folder 
-           files <- sort(dir(folder))
+           files <- sort(dir(data_folder))
            files <- files[c(grep(format(from, "%Y_%m"), files):
                               grep(format(to, "%Y_%m"), files))]
            
@@ -144,7 +154,7 @@ fetch <- function(dataset="LOAD",
            out <- NULL
            
            for(i in files){
-             temp <- read.csv(file.path(folder, i), sep="\t")
+             temp <- read.csv(file.path(data_folder, i), sep="\t")
              temp <- dplyr::filter(temp, AreaCode %in% AreaCodes$AreaCode)
              temp[c(2, 4:6, 8)] <- NULL  # dripping not needed columns
              temp[1] <- as.POSIXct(temp$DateTime, tz = "UTC")
@@ -170,10 +180,10 @@ fetch <- function(dataset="LOAD",
          PRICE={
            
            # selecting the right folder
-           folder <- file.path(folder, set)
+           data_folder <- file.path(folder, set)
            
            # selecting which files in folder 
-           files <- sort(dir(folder))
+           files <- sort(dir(data_folder))
            files <- files[c(grep(format(from, "%Y_%m"), files):
                               grep(format(to, "%Y_%m"), files))]
            
@@ -181,15 +191,16 @@ fetch <- function(dataset="LOAD",
            out <- NULL
            
            for(i in files){
-             temp <- read.csv(file.path(folder, i), sep="\t")
+             temp <- read.csv(file.path(data_folder, i), sep="\t")
              temp <- dplyr::filter(temp, AreaCode %in% AreaCodes$AreaCode)
-             temp[1] <- as.POSIXct(temp$DateTime.UTC., tz = "UTC")
-             temp <- dplyr::filter(temp, DateTime >= from & DateTime <= to)
-             temp[3] <- as.factor(temp$AreaCode)
-             temp[8] <- as.factor(temp$Currency)
+             temp[2] <- as.POSIXct(temp$DateTime.UTC., tz = "UTC")
+             temp <- dplyr::filter(temp, DateTime.UTC. >= from & DateTime.UTC. <= to)
+             temp[4] <- as.factor(temp$AreaCode)
+             temp[8] <- as.factor(temp$ContractType)
+             temp[11] <- as.factor(temp$Currency)
              if(aggregate.hourly){
-               temp <- aggregate(temp$Price, by = list(
-                 DateTime = lubridate::floor_date(temp$DateTime, unit = "hours"),
+               temp <- aggregate(temp$Price.Currency.MWh, by = list(
+                 DateTime.UTC. = lubridate::floor_date(temp$DateTime.UTC., unit = "hours"),
                  AreaCode = temp$AreaCode,
                  Currency = temp$Currency),
                  FUN = mean)
@@ -207,10 +218,10 @@ fetch <- function(dataset="LOAD",
          GENERATION={
            
            # selecting the right folder
-           folder <- file.path(folder, set)
+           data_folder <- file.path(folder, set)
            
            # selecting which files in folder 
-           files <- sort(dir(folder))
+           files <- sort(dir(data_folder))
            files <- files[c(grep(format(from, "%Y_%m"), files):
                               grep(format(to, "%Y_%m"), files))]
            
@@ -218,7 +229,7 @@ fetch <- function(dataset="LOAD",
            out <- NULL
            
            for(i in files){
-             temp <- read.csv(file.path(folder, i), sep="\t")
+             temp <- read.csv(file.path(data_folder, i), sep="\t")
              temp <- dplyr::filter(temp, AreaCode %in% AreaCodes$AreaCode)
              if(!is.null(technology)){
                temp <- dplyr::filter(temp, toupper(ProductionType) %in% toupper(technology))
@@ -250,10 +261,10 @@ fetch <- function(dataset="LOAD",
          GENERATION_UNIT={
            
            # selecting the right folder
-           folder <- file.path(folder, set)
+           data_folder <- file.path(folder, set)
            
            # selecting which files in folder 
-           files <- sort(dir(folder))
+           files <- sort(dir(data_folder))
            files <- files[c(grep(format(from, "%Y_%m"), files):
                               grep(format(to, "%Y_%m"), files))]
            
@@ -261,7 +272,7 @@ fetch <- function(dataset="LOAD",
            out <- NULL
            
            for(i in files){
-             temp <- read.csv(file.path(folder, i), sep="\t")
+             temp <- read.csv(file.path(data_folder, i), sep="\t")
              temp <- dplyr::filter(temp, AreaCode %in% AreaCodes$AreaCode)
              if(!is.null(technology)){
                temp <- dplyr::filter(temp, toupper(ProductionType) %in% toupper(technology))
