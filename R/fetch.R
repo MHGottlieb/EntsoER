@@ -99,7 +99,7 @@ fetch <- function(dataset="PRICE",
   }
   
   #AreaCodes
-  #data("AreaCodes_dat", package = "EntsoER")
+  data("AreaCodes_dat", package = "EntsoER")
   AreaCodes <- dplyr::filter(AreaCodes_dat, Dataset==set)
   
   if(all(toupper(areas)=="ALL")){
